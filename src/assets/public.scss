@@ -1,0 +1,77 @@
+// 全局整体样式
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'PingFang SC', '微软雅黑', 'Helvetica Neue', 'Hiragino Sans GB',
+        'Microsoft YaHei', Arial, Helvetica, sans-serif;
+}
+
+li {
+    list-style: none;
+}
+
+html,
+body {
+    margin: 0;
+    height: 100%;
+    background-color: #fff;
+}
+
+//自定义类
+
+//分割符
+.seprator-163 {
+    display: inline-block;
+    width: 1px;
+    height: 10px;
+    background: #d2d2d2;
+    margin: 0 8px;
+}
+.list-title-163 {
+    display: block;
+    height: 34px;
+    line-height: 34px;
+    font-weight: 600;
+    font-size: 24px;
+    font-family: PingFang SC;
+    margin-bottom: 20px;
+    margin-top: 32px;
+    color: #333;
+}
+.tag-163 {
+    display: inline-block;
+    margin-right: 20px;
+    height: 32px;
+    line-height: 32px;
+    color: #666;
+    font-size: 14px;
+    padding: 0 20px;
+    border: 1px solid #ccc;
+    border-radius: 17px;
+}
+//遮罩层
+.overlay-163 {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 15;
+}
+//提示框
+.popover-wrapper-163 {
+    .item {
+        padding: 6px 2px;
+        cursor: pointer;
+    }
+    .item:hover {
+        background-color: #eef;
+    }
+    .item:nth-child(1) {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    .item:nth-child(5) {
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+}
