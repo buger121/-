@@ -6,12 +6,18 @@
              @ended="endedHandle"
              @removetrack="removeTrackHandle"
              )
-            el-button(size="mini" @click="play") 播放
+            el-button(size="mini" @click="play" class="play-btn") 播放
+            DanMu
+
 </template>
 
 <script>
+import DanMu from './DanMu.vue'
 import flvjs from 'flv.js'
 export default {
+    components: {
+        DanMu,
+    },
     props: {
         toggleVideo: Boolean,
     },
@@ -58,5 +64,8 @@ export default {
     width: 1000px;
     height: 500px;
     margin: 60px auto;
+}
+.play-btn {
+    margin-right: 20px;
 }
 </style>

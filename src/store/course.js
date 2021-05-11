@@ -110,6 +110,29 @@ const course = {
                 console.log(err)
             }
         },
+
+        async getDanMuByLessonId({ commit }, lessonId) {
+            const query = {
+                lessonId,
+            }
+            try {
+                const { data } = await axios.get('/course/danmu', {
+                    params: query,
+                })
+                return data
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
+        async addDanMu({ commit }, danMuData) {
+            try {
+                const { data } = await axios.post('/course/addDanMu', danMuData)
+                return data
+            } catch (err) {
+                console.log(err)
+            }
+        },
     },
 }
 

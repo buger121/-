@@ -5,7 +5,7 @@
         //-     span 章节1
         //-     span 课时1
         //-     span 什么是HTML
-        VideoPlayer(:toggleVideo="toggleVideo" :videoSrc="videoSrc" v-if="lessonType === 'video'")
+        VideoPlayer(:toggleVideo="toggleVideo" :videoSrc="videoSrc" v-show="lessonType === 'video'")
         TestBox(v-if="lessonType === 'test'" :testData="testData")
         LivePlayer(v-if="lessonType === 'live'")
         div(class="aside" v-if="lessonType !== 'live'")

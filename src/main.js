@@ -9,7 +9,9 @@ import components from './components'
 import './assets/public.scss'
 //引入video.js样式
 import 'video.js/dist/video-js.css'
-//引入flv.js
+//引入jquery.danmu
+import './static/jquery-3.6.0'
+import './static/jquery.danmu.min.js'
 
 Vue.use(ElementUI)
 //注入全局组件

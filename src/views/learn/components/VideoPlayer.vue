@@ -1,11 +1,14 @@
 <template lang="pug">
     div(class="video-container" :class="{fold: toggleVideo===true}")
-            video(ref="videoPlayer" class="video-js")
+            video(ref="videoPlayer" class="video-js vjs-my-style")
+            DanMu
 </template>
 
 <script>
 import videojs from 'video.js'
+import DanMu from './DanMu.vue'
 export default {
+    components: { DanMu },
     props: {
         toggleVideo: Boolean,
         videoSrc: String,
@@ -54,11 +57,14 @@ export default {
     position: relative;
     top: 60px;
     left: 60px;
-    height: 600px;
+    height: 550px;
     transition: width 0.4s linear;
 }
 .video-container.fold {
     width: 1200px;
     transition: width 0.4s linear;
+}
+::v-deep.video-js .vjs-big-play-button {
+    z-index: 9999;
 }
 </style>
