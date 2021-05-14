@@ -8,7 +8,7 @@ const autoprefixer = require('autoprefixer')
 module.exports = {
     entry: './src/main.js',
     output: {
-        path: path.resolve(__dirname, './dist'),
+        path: path.resolve(__dirname, 'dist/assets'),
         filename: 'bundle.js',
     },
     resolve: {
@@ -35,9 +35,9 @@ module.exports = {
                 use: [
                     MiniCssExtractPlugin.loader,
                     'css-loader',
-                    {
-                        loader: 'postcss-loader',
-                    },
+                    // {
+                    //     loader: 'postcss-loader',
+                    // },
                     'sass-loader',
                     {
                         loader: 'sass-resources-loader',
