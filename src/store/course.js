@@ -71,6 +71,58 @@ const course = {
             }
         },
 
+        async getCourseDiscussData({ commit }, courseId) {
+            const query = {
+                courseId,
+            }
+            try {
+                const { data } = await axios.get('/course/discussData', {
+                    params: query,
+                })
+                return data
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
+        async getDiscussById({ commit }, discussId) {
+            const query = {
+                discussId,
+            }
+            try {
+                const { data } = await axios.get('/course/discussItem', {
+                    params: query,
+                })
+                return data
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
+        async releaseCourseDiscuss({ commit }, discussData) {
+            try {
+                const { data } = await axios.post(
+                    '/course/addDiscuss',
+                    discussData
+                )
+                return data
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
+        async updateCourseDiscuss({ commit }, params) {
+            try {
+                const { data } = await axios.post(
+                    '/course/updateDiscuss',
+                    params
+                )
+                return data
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
         async getNoteComment({ commit }, noteId) {
             const query = {
                 noteId,

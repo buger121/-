@@ -23,7 +23,7 @@
         div(class="tab-container" v-show="activeIndex === 2")
             CourseNote(:courseInfo="mainData.info" :notesData="notesData")
         div(class="tab-container" v-show="activeIndex === 3")
-            CourseForum
+            CourseForum(:disscussData="disscussData" @update-discuss-data="updateDiscussData")
             
 
 </template>
@@ -37,18 +37,22 @@ export default {
     components: { MainInfo, CourseNote, CourseForum },
     data() {
         return {
-            activeIndex: 1,
+            activeIndex: 3,
             rate: 5,
             mainData: {
                 info: {},
             },
             notesData: [],
-            disscussData: {},
+            disscussData: [],
             courseId: 0,
         }
     },
     methods: {
-        ...mapActions(['getCourseMainInfo', 'getCourseNotesData']),
+        ...mapActions([
+            'getCourseMainInfo',
+            'getCourseNotesData',
+            'getCourseDiscussData',
+        ]),
         ...mapMutations(['SET_COURSE_INFO']),
         switchTab(e) {
             const tab = e.target
@@ -78,6 +82,9 @@ export default {
         async getDiscussData() {
             const data = await this.getCourseDiscussData(this.courseId)
             this.disscussData = data
+        },
+        updateDiscussData() {
+            this.getDiscussData()
         },
     },
     async created() {
