@@ -14,23 +14,7 @@
                         el-option(v-for="item in sortOptions"  :key="item.value" :label="item.label" :value="item.value")
             div(class="discuss-main")
                 div(class="discuss-item" v-for="item in discussData")
-                    div(class="item-header")
-                        img(:src="item.userAvatar")
-                        span(class="username") {{item.userName}}
-                        span(class="date") {{item.releaseDate}}
-                    div(class="item-content")
-                        span {{item.content}}
-                    div(class="item-footer")
-                        div(class="tool-bar")
-                            span(class="view")
-                                i(class="el-icon-view")
-                                span （{{item.view}}）
-                            span(class="comment")
-                                i(class="el-icon-chat-square")
-                                span （{{item.reply.length}}）
-                            span(class="like")
-                                i(class="el-icon-s-opportunity")
-                                span （{{item.like.length}}）
+                    DiscussItem(:item="item" @update-discuss-data="updateDiscussData")
         div(class="start-discuss")
             div(class="start-btn") 
                 i(class="el-icon-chat-dot-round")
@@ -46,7 +30,9 @@
 
 <script>
 import { mapActions } from 'vuex'
+import DiscussItem from './DiscussItem.vue'
 export default {
+    components: { DiscussItem },
     data() {
         return {
             sortBy: '',
@@ -82,6 +68,9 @@ export default {
         backToAll() {
             this.$emit('back-to-all')
         },
+        updateDiscussData() {
+            this.$emit('update-discuss-date')
+        },
         async releaseDiscuss() {
             const courseId = Number(this.$route.query.courseId)
             const res = await this.releaseCourseDiscuss({
@@ -89,14 +78,13 @@ export default {
                 discussArea: this.discussArea,
                 content: this.discussContent,
             })
-            console.log(res)
             if (res.success === true) {
                 this.$message({
                     type: 'success',
                     message: '发起讨论成功！',
                 })
                 //通知父组件刷新数据
-                this.$emit('update-discuss-date')
+                this.updateDiscussData()
                 this.discussArea = ''
                 this.discussContent = ''
             }

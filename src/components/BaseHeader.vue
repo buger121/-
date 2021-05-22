@@ -16,11 +16,12 @@
                     i(class="el-icon-download")
                     i(class="el-icon-sell")
                     i(class="el-icon-shopping-cart-2")
-                    i(class="el-icon-bell")
+                    i(class="el-icon-bell" @click="toMessageCenter")
+                        span(class="message-num" v-show="unreadMessage !== 0") {{unreadMessage}}
                 span.user-center
                     span |
                     span 会员中心
-                    span 我的学习
+                    span(@click="toMyCourse") 我的学习
                     span |
                     span(@click="loginHandle" v-show="!isLogin") 登录/注册
                     span(v-if="isLogin" class="username") {{user.username}}
@@ -34,12 +35,12 @@
                             div.item(@click="signOut") 退出
                         img(class="avatar" :src="avatarSrc" slot="reference" v-if="isLogin" ref="avatar")
                         img(class="avatar" src="https://study-163.oss-cn-beijing.aliyuncs.com/user/default/avatar2.jpg" slot="reference" v-if="!isLogin")
-        BaseLoginDialog(:showDialog="showLoginDialog" @close-dialog="closeHandle")
+        BaseLoginDialog(:showDialog="showLoginDialog" @close-dialog="closeHandle" @get-interactive="getInteractiveHandle")
 
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 import jwt_decode from 'jwt-decode'
 export default {
     computed: {
@@ -63,6 +64,8 @@ export default {
             this.user = decode
             const res = await this.getUserInfo(decode.id)
             this.user = res
+            //获取用户交互信息
+            this.getInteractiveHandle()
         } catch (err) {
             console.log(err)
         }
@@ -75,11 +78,12 @@ export default {
             showOverlay: false,
             user: {},
             isLogin: false,
+            unreadMessage: 0,
         }
     },
     methods: {
-        ...mapActions(['getUserInfo']),
-
+        ...mapActions(['getUserInfo', 'getInteractive', 'readAllMessage']),
+        ...mapMutations(['SET_USER_MESSAGE']),
         loginHandle() {
             this.showLoginDialog = true
             this.showOverlay = true
@@ -87,6 +91,24 @@ export default {
         closeHandle() {
             this.showLoginDialog = false
             this.showOverlay = false
+        },
+        async getInteractiveHandle() {
+            const res = await this.getInteractive()
+            this.SET_USER_MESSAGE(res)
+            res.forEach(item => {
+                if (item.viewed === 1) {
+                    //1表示该消息未读
+                    this.unreadMessage++
+                }
+            })
+        },
+        changeRoute(data) {
+            try {
+                this.$router.push(data)
+            } catch (err) {
+                //避免重复路由
+                console.log(err)
+            }
         },
         toHomePage() {
             this.$router.push({ path: '/' })
@@ -103,17 +125,23 @@ export default {
             }
         },
         toMyOrder() {
-            try {
-                this.$router.push({
-                    path: '/myOrder',
-                })
-            } catch (err) {
-                //避免重复路由
-                console.log(err)
-            }
+            this.changeRoute({ path: '/myOrder' })
+        },
+        toMyCourse() {
+            this.changeRoute({ path: '/myCourse' })
+        },
+        async toMessageCenter() {
+            //进入消息中心之前，处理未读消息
+            this.unreadMessage = 0
+            await this.readAllMessage()
+            this.getInteractiveHandle()
+            this.changeRoute({ path: '/myMessage' })
         },
         signOut() {
             this.isLogin = false
+            //清除token
+            localStorage.removeItem('token')
+            localStorage.removeItem('token-expire')
         },
     },
 }
@@ -159,6 +187,22 @@ export default {
             margin-right: 30px;
             color: #aaa;
             cursor: pointer;
+        }
+        .el-icon-bell {
+            position: relative;
+        }
+        .message-num {
+            color: #fff;
+            display: inline-block;
+            font-size: 12px;
+            line-height: 14px;
+            text-align: center;
+            width: 14px;
+            background-color: $main-color;
+            border-radius: 50%;
+            position: absolute;
+            left: 8px;
+            top: -6px;
         }
         .user-center span {
             font-size: 13px;

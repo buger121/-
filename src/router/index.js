@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '../views/home/HomePage.vue'
 import PersonInfo from '../views/user/PersonInfo.vue'
 import MyOrder from '../views/user/MyOrder.vue'
+import MyCourse from '../views/user/MyCourse.vue'
+import MyMessage from '../views/user/MyMessage.vue'
 import CourseDetail from '../views/course/CourseDetail.vue'
 import CourseMain from '../views/study/CourseMain.vue'
 import CourseLearn from '../views/learn/CourseLearn.vue'
@@ -24,6 +26,16 @@ const routes = [
         path: '/myOrder',
         name: 'myOrder',
         component: MyOrder,
+    },
+    {
+        path: '/myCourse',
+        name: 'myCourse',
+        component: MyCourse,
+    },
+    {
+        path: '/myMessage',
+        name: 'MyMessage',
+        component: MyMessage,
     },
     {
         path: '/course/detail/:course_id',

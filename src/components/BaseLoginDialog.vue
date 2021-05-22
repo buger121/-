@@ -36,7 +36,7 @@
 <script>
 import Tab from './common/tab.vue'
 import Tabs from './common/tabs.vue'
-import { mapActions, mapState, mapMutations } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 export default {
     components: { Tab, Tabs },
     props: {

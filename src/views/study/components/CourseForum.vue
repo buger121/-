@@ -6,24 +6,8 @@
                     div(class="title") 讨论区
                     div(class="desc") 欢迎进入课程讨论区，你可以与本课程的老师和同学在这里交流。如果你有课程相关的问题，请发到老师答疑区；经验、思考、创意、作品、转帖请发到综合讨论区。欢迎分享，鼓励原创，杜绝广告，请大家共同维护一个包容、积极、相互支持的交流氛围，谢谢。
                 div(class="item" v-for="item in disscussData")
-                    div(class="item-header")
-                        img(:src="item.userAvatar")
-                        span(class="username") {{item.userName}}
-                        span(class="time") {{item.releaseDate | DateFormate}}
-                        span(class="origin") 【{{item.discussArea === 1 ? '老师答疑区' : '综合讨论区'}}】
-                    div(class="item-content") {{item.content}}
-                    div(class="item-footer")
-                        span(class="view")
-                            i(class="el-icon-view")
-                            span ({{item.view}})
-                        span(class="comment" @click="toggleShowComment(item.discussId)")
-                            i(class="el-icon-chat-dot-round")
-                            span ({{item.reply.length}})
-                        span(class="like" :class="{liked: isLiked(item.like)}" @click="updateDiscuss({attr:'like', discussId:item.discussId})")
-                            i(class="el-icon-s-opportunity")
-                            span ({{item.like.length}})
-                        CommentBox(:discussId="item.discussId" v-show="commentBoxMap[item.discussId]")
-                        
+                    DiscussItem(:item="item" @update-discuss-data="updateDiscussData")
+     
             div(class="forum-aside")
                 div(class="discussion-btn")
                     
@@ -45,15 +29,13 @@
 </template>
 
 <script>
-import jwt from 'jwt-decode'
-import { mapActions } from 'vuex'
 import DiscussArea from './DiscussArea.vue'
-import CommentBox from './commentBox.vue'
+import DiscussItem from './DiscussItem.vue'
 export default {
     props: {
         disscussData: Array,
     },
-    components: { DiscussArea, CommentBox },
+    components: { DiscussArea, DiscussItem },
     computed: {
         teacherDiscussData: function() {
             const res = this.disscussData.filter(item => {
@@ -67,33 +49,16 @@ export default {
             })
             return res
         },
-        userId: function() {
-            const token = window.localStorage.getItem('token')
-            const decode = jwt(token)
-            return decode.id
-        },
     },
-    watch: {
-        disscussData: {
-            handler: function() {
-                let tmpMap = {}
-                this.disscussData.forEach(item => {
-                    tmpMap[item.discussId] = false
-                })
-                this.commentBoxMap = tmpMap
-            },
-        },
-    },
+
     data() {
         return {
             showAll: true,
             showTeacherDiscuss: false,
             showStudentsDiscuss: false,
-            commentBoxMap: {},
         }
     },
     methods: {
-        ...mapActions(['updateCourseDiscuss']),
         showTeacherArea() {
             this.showTeacherDiscuss = true
             this.showAll = false
@@ -111,32 +76,6 @@ export default {
         },
         updateDiscussData() {
             this.$emit('update-discuss-data')
-        },
-        isLiked(likes) {
-            if (likes.indexOf(String(this.userId)) !== -1) {
-                return true
-            } else {
-                return false
-            }
-        },
-        toggleShowComment(disId) {
-            const val = this.commentBoxMap[disId]
-            this.$set(this.commentBoxMap, disId, !val)
-            console.log(this.commentBoxMap[disId])
-        },
-        async updateDiscuss(params) {
-            const courseId = this.$route.query.courseId
-            params.userId = this.userId
-            params.courseId = courseId
-            const res = await this.updateCourseDiscuss(params)
-            if (res.success === true) {
-                this.updateDiscussData()
-            }
-        },
-    },
-    filters: {
-        DateFormate(val) {
-            return val.split('T')[0]
         },
     },
 }
@@ -164,55 +103,6 @@ export default {
                 color: #666;
                 font-size: 14px;
                 padding-bottom: 20px;
-            }
-        }
-        .item {
-            padding: 16px 0;
-            border-bottom: 1px solid #dfdfdf;
-            font-size: 12px;
-            color: #666;
-            .item-header {
-                img {
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 50%;
-                    margin-right: 18px;
-                }
-                span {
-                    display: inline-block;
-                    vertical-align: top;
-                    position: relative;
-                    top: 12px;
-                }
-                .username {
-                    color: $main-color;
-                    margin-right: 28px;
-                }
-                .origin {
-                    float: right;
-                }
-            }
-            .item-content {
-                font-size: 14px;
-                color: #666;
-                margin: 16px 0;
-            }
-            .item-footer {
-                overflow: hidden;
-                & > span {
-                    cursor: pointer;
-                    float: right;
-                    margin-left: 12px;
-                    i {
-                        margin-right: 4px;
-                    }
-                }
-                & > span:hover {
-                    color: #333;
-                }
-                span.liked {
-                    color: $main-color;
-                }
             }
         }
     }

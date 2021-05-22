@@ -45,6 +45,18 @@ const course = {
             }
         },
 
+        async collectCourse({ commit }, courseId) {
+            try {
+                const { data } = await axios.post(
+                    '/course/collectCourse',
+                    courseId
+                )
+                return data
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
         async releaseComment({ commit }, commentData) {
             try {
                 const { data } = await axios.post(
@@ -117,6 +129,20 @@ const course = {
                     '/course/updateDiscuss',
                     params
                 )
+                return data
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
+        async deleteDiscussById({ commit }, discussId) {
+            const params = {
+                discussId,
+            }
+            try {
+                const { data } = await axios.delete('/course/deleteDiscuss', {
+                    params,
+                })
                 return data
             } catch (err) {
                 console.log(err)

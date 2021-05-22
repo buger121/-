@@ -12,7 +12,8 @@
                         span 讲师：翁恺
                 div(class="tool-bar" )
                     i(class="el-icon-share")
-                    i(class="el-icon-star-off")
+                    i(class="el-icon-star-off collect" @click="collectCourseHandle" v-if="!collected")
+                    i(class="el-icon-star-on collect" @click="collectCourseHandle" v-if="collected")
                     i(class="el-icon-info")
             div(class="tabs" @click="switchTab")
                 div(class="tab" :class="{active: activeIndex === 1}" data-index="1") 主页
@@ -37,7 +38,7 @@ export default {
     components: { MainInfo, CourseNote, CourseForum },
     data() {
         return {
-            activeIndex: 3,
+            activeIndex: 1,
             rate: 5,
             mainData: {
                 info: {},
@@ -45,6 +46,7 @@ export default {
             notesData: [],
             disscussData: [],
             courseId: 0,
+            collected: false,
         }
     },
     methods: {
@@ -52,6 +54,8 @@ export default {
             'getCourseMainInfo',
             'getCourseNotesData',
             'getCourseDiscussData',
+            'collectCourse',
+            'getMyCollect',
         ]),
         ...mapMutations(['SET_COURSE_INFO']),
         switchTab(e) {
@@ -68,6 +72,18 @@ export default {
                 case 3:
                     this.getDiscussData()
                     break
+            }
+        },
+        async collectCourseHandle() {
+            const res = await this.collectCourse({ courseId: this.courseId })
+            if (res.success === true) {
+                const msgInfo = this.collected ? '取消收藏成功' : '收藏课程成功'
+                //课程收藏成功
+                this.$message({
+                    type: 'success',
+                    message: msgInfo,
+                })
+                this.collected = !this.collected
             }
         },
         async getMainData() {
@@ -90,6 +106,13 @@ export default {
     async created() {
         this.courseId = this.$route.query.courseId
         this.getMainData()
+        //获取我的收藏,判断当前课程是否被收藏
+        const res = await this.getMyCollect()
+        for (let i = 0; i < res.length; i++) {
+            if (res[i].course_id == this.courseId) {
+                this.collected = true
+            }
+        }
     },
 }
 </script>
@@ -135,12 +158,11 @@ export default {
                 padding: 5px 10px;
                 cursor: pointer;
             }
-            i:hover {
-                background-color: #eee;
-                color: $main-color;
-            }
             i:not(:last-child) {
                 border-right: 1px solid #eee;
+            }
+            .collect {
+                color: rgb(247, 186, 42);
             }
         }
     }

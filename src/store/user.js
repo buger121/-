@@ -3,10 +3,14 @@ import axios from './../utils/http'
 const user = {
     state: {
         userInfo: {},
+        userMessage: [],
     },
     mutations: {
         SET_USER_INFO(state, data) {
             state.userInfo = data
+        },
+        SET_USER_MESSAGE(state, data) {
+            state.userMessage = data
         },
     },
     actions: {
@@ -25,6 +29,42 @@ const user = {
         async getOrders({ commit }) {
             try {
                 const { data } = await axios.get('api/user/orders')
+                return data
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
+        async getCourse({ commit }) {
+            try {
+                const { data } = await axios.get('api/user/courses')
+                return data
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
+        async getMyCollect({ commit }) {
+            try {
+                const { data } = await axios.get('api/user/collects')
+                return data
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
+        async getInteractive({ commit }) {
+            try {
+                const { data } = await axios.get('api/user/interactive')
+                return data
+            } catch (err) {
+                console.log(err)
+            }
+        },
+
+        async readAllMessage({ commit }) {
+            try {
+                const { data } = await axios.post('api/user/readMessage')
                 return data
             } catch (err) {
                 console.log(err)
